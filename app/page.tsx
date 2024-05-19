@@ -27,7 +27,7 @@ export default function Home() {
 
   return (
     <div>
-      <div className="grid grid-cols-8 gap-4 border-b-2 border-orange-200 py-2">
+      <div className="grid grid-cols-8 gap-4 border-b-2 border-secondary py-2 bg-white text-primary rounded-t-lg">
         <div></div>
         <div>İşlemci</div>
         <div>Ekran Kartı</div>
@@ -38,8 +38,8 @@ export default function Home() {
         <div></div>
       </div>
       {paginatedState.map((data, index) => (
-        <div className="grid grid-cols-8 gap-4 border-b-2 border-orange-200">
-          <div className="flex items-center">
+        <div className="grid grid-cols-8 gap-4 border-b-2 border-secondary bg-white text-secondary">
+          <div className="flex items-center p-4">
             <img className=" h-32" src={data.img}></img>{" "}
           </div>
           <div className="flex items-center"> {data.islemci} </div>
@@ -50,7 +50,7 @@ export default function Home() {
           <div className="flex items-center"> {data.fiyat} </div>
           <div className="flex items-center">
             <button
-              className="bg-orange-400 text-white p-2 rounded-lg"
+              className="bg-primary text-white p-2 rounded-lg"
               onClick={() => router.push(data.url)}
             >
               Görüntüle
@@ -59,17 +59,42 @@ export default function Home() {
         </div>
       ))}
 
-{prods.length > 0 ? (
-        <div className="flex justify-between mt-4">
-          <div className="mt-3">
+      {prods.length > 0 ? (
+        <div className="flex justify-between py-2 px-4 bg-white rounded-b-lg">
+          <div className="text-secondary">
             {prods.length} adet sonuçtan {startIndex + 1}-
-            {endIndex + 1 > prods.length
-              ? prods.length
-              : endIndex + 1}{" "}
+            {endIndex + 1 > prods.length ? prods.length : endIndex + 1}{" "}
             arasındakiler gösteriliyor.
           </div>
-         <div>
-          <button></button>
+          <div className="flex gap-2">
+            <button
+              className="bg-primary text-white px-2 py-1 rounded-lg"
+              onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
+            >
+              {"<"}
+            </button>
+            <select
+              className="text-primary"
+              value={currentPage}
+              onChange={(e) => setCurrentPage(parseInt(e.target.value))}
+            >
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                (page) => (
+                  <option key={page} value={page}>
+                    {page}
+                  </option>
+                )
+              )}
+            </select>
+            <button className="text-secondary">{"/ " + totalPages}</button>
+            <button
+              className="bg-primary text-white px-2 py-1 rounded-lg"
+              onClick={() =>
+                currentPage < totalPages && setCurrentPage(currentPage + 1)
+              }
+            >
+              {">"}
+            </button>
           </div>
         </div>
       ) : (

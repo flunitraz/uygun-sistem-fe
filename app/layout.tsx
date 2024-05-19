@@ -18,11 +18,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <div className="w-full flex place-content-center items-center">
-        <div className="w-[1280px] h-[64px]  flex items-center text-xl font-bold text-orange-400">Uygun Sistem</div>
+        <div className="w-[1280px] h-[64px]  flex items-center text-xl font-bold text-primary">Uygun Sistem</div>
 
         </div>
-        <div className="flex place-content-center w-full bg-orange-200">
-          <div className="w-[1280px] bg-white my-4 p-4 rounded-lg">{children}</div>
+        <div className="flex place-content-center w-full bg-secondary">
+          <div className="w-[1280px] my-4 rounded-lg bg-w">{children}</div>
         </div>
       </body>
     </html>
