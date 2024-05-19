@@ -16,7 +16,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <div className="w-full flex place-content-center items-center">
+        <div className="w-[1280px] h-[64px]  flex items-center text-xl font-bold text-orange-400">Uygun Sistem</div>
+
+        </div>
+        <div className="flex place-content-center w-full bg-orange-200">
+          <div className="w-[1280px] bg-white my-4 p-4 rounded-lg">{children}</div>
+        </div>
+      </body>
     </html>
   );
 }
