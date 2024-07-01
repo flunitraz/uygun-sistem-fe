@@ -1,33 +1,50 @@
 "use client";
 import data from "./mockdata.json";
-import React ,{ useState } from "react";
+import React, { useState, useRef } from "react";
 import { TfiLayoutGrid3 } from "react-icons/tfi";
 import { TfiAlignJustify } from "react-icons/tfi";
 import ListView from "./components/listView";
-import { Button } from "antd";
+import { Button, Tour } from "antd";
 import { Prod } from "./utils/Prod";
 import Filter from "./components/filter";
-import { TableProps } from "antd";
-type OnChange = NonNullable<TableProps<Prod>["onChange"]>;
-type Filters = Parameters<OnChange>[1];
+import type { TourProps } from "antd";
 
 export default function Home() {
-  const [prods, setProds] = React.useState(data as Prod[]);
-  const [filteredInfo, setFilteredInfo] = useState<Filters>({});
-  React.useEffect(()=>{console.log(filteredInfo)},[filteredInfo])
+  const ref1 = useRef(null);
+  const ref2 = useRef(null);
 
+  const [open, setOpen] = useState<boolean>(false);
+
+  const steps: TourProps["steps"] = [
+    {
+      title: "Filtrele",
+      description: "Lorem ipsum ",
+      target: () => ref1.current,
+    },
+    {
+      title: "Gorunumu Degistir",
+      description: "Lorem ipsum ",
+      target: () => ref2.current,
+    },
+  ];
+  const [prods, setProds] = React.useState(data as Prod[]);
+  const [filteredProds, setFilteredProds] = React.useState(data as Prod[]);
   return (
-      <div className="w-full">
-        <div className="flex justify-end mb-2">
-          <Button >
-            <TfiAlignJustify />
-            <TfiLayoutGrid3 />
-          </Button>
+    <div className="w-full">
+      <div className="flex justify-end gap-4 mb-2">
+        <Button onClick={() => setOpen(true)}>?</Button>
+        <Button ref={ref2}>
+          <TfiAlignJustify />
+          <TfiLayoutGrid3 />
+        </Button>
+      </div>
+      <div className="flex gap-4">
+        <div ref={ref1} className="h-min">
+          <Filter setFilteredProds={setFilteredProds} prods={prods}></Filter>
         </div>
-        <div className="flex gap-4"> 
-          <Filter filteredInfo={filteredInfo} setFilteredInfo={setFilteredInfo} prods={prods}></Filter>
-        <ListView filteredInfo={filteredInfo} setFilteredInfo={setFilteredInfo} state={prods} /></div>
-      
+        <ListView state={filteredProds} />
+      </div>
+      <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
     </div>
   );
 }
