@@ -23,7 +23,7 @@ export default function RootLayout({
         <div className="w-[1280px] h-[64px]  flex items-center text-xl font-bold text-primary">Uygun Sistem</div>
 
         </div>
-        <div className="flex place-content-center w-full min-h-screen bg-secondary">
+        <div className="flex place-content-center w-full min-h-screen">
           <div className="w-[1280px] my-4 rounded-lg bg-w">{children}</div>
         </div></AntdRegistry>
       </body>
