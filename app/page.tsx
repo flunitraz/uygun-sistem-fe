@@ -1,48 +1,110 @@
 "use client";
 import data from "./mockdata.json";
-import React, { useState, useRef } from "react";
-import { TfiLayoutGrid3 } from "react-icons/tfi";
-import { TfiAlignJustify } from "react-icons/tfi";
+import React, { useState, useRef, useEffect } from "react";
+import { TfiLayoutGrid3, TfiAlignJustify } from "react-icons/tfi";
 import ListView from "./components/listView";
-import { Button, Tour } from "antd";
 import { Prod } from "./utils/Prod";
 import Filter from "./components/filter";
-import type { TourProps } from "antd";
+import type { TourProps, RadioChangeEvent } from "antd";
+import { Button, Tour, Radio, Select } from "antd";
+
+const optionsView = [
+  {
+    label: <div className="translate-y-2"><TfiLayoutGrid3 /></div>,
+    value: "card",
+  },
+  {
+    label: <div className="translate-y-2"><TfiAlignJustify /></div>,
+    value: "list",
+  },
+];
 
 export default function Home() {
   const ref1 = useRef(null);
   const ref2 = useRef(null);
+  const ref3 = useRef(null);
 
   const [open, setOpen] = useState<boolean>(false);
+  const [view, setView] = useState("list");
+  const [order, setOrder] = useState("default");
+  
+  const [prods, setProds] = useState<Prod[]>(data);
+  const [filteredProds, setFilteredProds] = useState<Prod[]>(data);
+
+  const onChangeView = ({ target: { value } }: RadioChangeEvent) => {
+    setView(value);
+  };
+
+  const handleOrder = (value: string) => {
+    setOrder(value);
+    sortProducts(filteredProds, value);
+  };
+
+  const sortProducts = (products: Prod[], order: string) => {
+    let sortedProds = [...products];
+    if (order === "priceAsc") {
+      sortedProds.sort((a, b) => Number(a.fiyat) - Number(b.fiyat));
+    } else if (order === "priceDesc") {
+      sortedProds.sort((a, b) => Number(b.fiyat) - Number(a.fiyat));
+    }
+    setFilteredProds(sortedProds);
+  };
+
+  const handleFilterChange = (filtered: Prod[]) => {
+    setFilteredProds(filtered);
+    sortProducts(filtered, order);
+  };
 
   const steps: TourProps["steps"] = [
     {
       title: "Filtrele",
-      description: "Lorem ipsum ",
+      description: "Lorem ipsum",
       target: () => ref1.current,
     },
     {
-      title: "Gorunumu Degistir",
-      description: "Lorem ipsum ",
+      title: "Görünümü Değiştir",
+      description: "Lorem ipsum",
       target: () => ref2.current,
     },
+    {
+      title: "Siralamayi Değiştir",
+      description: "Lorem ipsum",
+      target: () => ref3.current,
+    },
   ];
-  const [prods, setProds] = React.useState(data as Prod[]);
-  const [filteredProds, setFilteredProds] = React.useState(data as Prod[]);
+
+  useEffect(() => {
+    sortProducts(filteredProds, order);
+  }, [order, prods]);
+
   return (
     <div className="w-full">
       <div className="flex justify-end gap-4 mb-2">
         <Button onClick={() => setOpen(true)}>?</Button>
-        <Button ref={ref2}>
-          <TfiAlignJustify />
-          <TfiLayoutGrid3 />
-        </Button>
+        <Select
+          ref={ref3}
+          value={order}
+          onChange={handleOrder}
+          options={[
+            { value: "default", label: "Varsayılan" },
+            { value: "priceAsc", label: "En düşük fiyat" },
+            { value: "priceDesc", label: "En yüksek fiyat" },
+          ]}
+        />
+        <Radio.Group
+          ref={ref2}
+          options={optionsView}
+          onChange={onChangeView}
+          value={view}
+          optionType="button"
+          buttonStyle="solid"
+        />
       </div>
       <div className="flex gap-4">
         <div ref={ref1} className="h-min">
-          <Filter setFilteredProds={setFilteredProds} prods={prods}></Filter>
+          <Filter setFilteredProds={handleFilterChange} prods={prods} />
         </div>
-        <ListView state={filteredProds} />
+        {view === "list" ? <ListView state={filteredProds} /> : <>other</>}
       </div>
       <Tour open={open} onClose={() => setOpen(false)} steps={steps} />
     </div>

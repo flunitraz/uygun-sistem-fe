@@ -15,36 +15,39 @@ export default function ListView({ state }: props) {
       dataIndex: "img",
       key: "img",
       render: (dataIndexValue, record) => (
-        <img className="w-32" src={dataIndexValue} alt={record.img} />
+        <div className="flex place-content-center">
+          <img width={128} src={dataIndexValue} alt={record.img} />
+        </div>
       ),
     },
     {
       render: (record) => (
         <Descriptions
           bordered
+          size="small"
           items={[
             {
-              label: "islemci",
+              label: "İşlemci",
               children: record.islemci,
               span: 3,
             },
             {
-              label: "ekran karti",
+              label: "Ekran Kartı",
               children: record.ekran_karti,
               span: 3,
             },
             {
-              label: "ram",
+              label: "Ram",
               children: record.ram,
               span: 2,
             },
 
             {
-              label: "depolama",
+              label: "Depolama",
               children: record.depolama,
             },
             {
-              label: "satici",
+              label: "Satıcı",
               span: 2,
               children: (
                 <a href={record.url} target="_blank">
@@ -53,7 +56,7 @@ export default function ListView({ state }: props) {
               ),
             },
             {
-              label: "fiyat",
+              label: "Fiyat",
               children: <b> {record.fiyat} TL</b>,
             },
           ]}
@@ -62,6 +65,12 @@ export default function ListView({ state }: props) {
     },
   ];
   return (
-      <Table showHeader={false} className="w-full" columns={columns} dataSource={state} />
+    <Table
+      size="small"
+      showHeader={false}
+      className="w-full"
+      columns={columns}
+      dataSource={state}
+    />
   );
 }

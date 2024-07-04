@@ -91,21 +91,21 @@ export default function Filter({
 
   return (
     <div className="h-min min-w-64 max-w-64 p-4 flex flex-col gap-2">
-      <Text>Islemci</Text>
+      <Text>İşlemci</Text>
       <Select
         mode="multiple"
         allowClear
         style={{ width: "100%" }}
-        placeholder="Islemci seç"
+        placeholder="İşlemci seç"
         onChange={(value) => handleChange(value, "islemci")}
         options={getUniqueValues(prods, "islemci", handleFilter("islemci"))}
       />
-      <Text>Ekran Karti</Text>
+      <Text>Ekran Kartı</Text>
       <Select
         mode="multiple"
         allowClear
         style={{ width: "100%" }}
-        placeholder="Ekran Karti seç"
+        placeholder="Ekran kartı seç"
         onChange={(value) => handleChange(value, "ekran_karti")}
         options={getUniqueValues(
           prods,
