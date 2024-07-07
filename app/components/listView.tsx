@@ -1,15 +1,14 @@
+"use client";
 import { Prod } from "../utils/Prod";
-import { getUniqueValues } from "../utils/getUniqueValues";
-import React, { useState } from "react";
-
-import type { TableColumnsType, TableProps } from "antd";
-import { Button, Space, Table, Descriptions } from "antd";
-
-type props = {
-  state: Prod[];
+import type { TableColumnsType } from "antd";
+import { Table, Descriptions } from "antd";
+import { useAppSelector } from "../store/hooks";
+type Props = {
+  prods: Prod[];
 };
 
-export default function ListView({ state }: props) {
+export default function ListView({ prods }: Props) {
+  const filteredProds = useAppSelector((state) => state.app.filteredProds);
   const columns: TableColumnsType<Prod> = [
     {
       dataIndex: "img",
@@ -70,7 +69,8 @@ export default function ListView({ state }: props) {
       showHeader={false}
       className="w-full"
       columns={columns}
-      dataSource={state}
+      dataSource={filteredProds.length > 0 ? filteredProds : prods}
+      rowKey={(record) => record.url}
     />
   );
 }

@@ -1,19 +1,19 @@
+"use client";
 import React, { useState, useEffect } from "react";
-import { Select, Button, Typography, InputNumber, Slider } from "antd";
+import { Select, Typography, Slider } from "antd";
 import { getUniqueValues } from "../utils/getUniqueValues";
 import { Prod } from "../utils/Prod";
-
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { sortProducts } from "../utils/sortProducts";
 const { Text } = Typography;
 
 type Props = {
   prods: Prod[];
-  setFilteredProds: any;
 };
 
-export default function Filter({
-  prods,
-  setFilteredProds,
-}: Props) {
+export default function Filter({ prods }: Props) {
+  const dispatch = useAppDispatch();
+  const order = useAppSelector((state) => state.app.order);
   const [selectedIslemci, setSelectedIslemci] = useState<string[]>([]);
   const [selectedEkranKarti, setSelectedEkranKarti] = useState<string[]>([]);
   const [selectedRam, setSelectedRam] = useState<string[]>([]);
@@ -61,7 +61,6 @@ export default function Filter({
       const priceMatch =
         (minPrice === undefined || Number(prod.fiyat) >= minPrice) &&
         (maxPrice === undefined || Number(prod.fiyat) <= maxPrice);
-
       return (
         islemciMatch &&
         ekranKartiMatch &&
@@ -73,13 +72,12 @@ export default function Filter({
     if (param) {
       return [...new Set(disabled.map((item: any) => item[param]))];
     } else {
-      return setFilteredProds(disabled);
+      return sortProducts(dispatch, disabled, order) as any;
     }
   };
 
   useEffect(() => {
     handleFilter();
-    console.log(handleFilter("islemci"));
   }, [
     selectedIslemci,
     selectedEkranKarti,
@@ -88,6 +86,7 @@ export default function Filter({
     minPrice,
     maxPrice,
   ]);
+
 
   return (
     <div className="h-min min-w-64 max-w-64 p-4 flex flex-col gap-2">
