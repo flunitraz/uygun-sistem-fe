@@ -1,7 +1,7 @@
-import axios from "axios";
 var cron = require("node-cron");
-const mongoose = require("mongoose");
 require("dotenv").config();
+const mongoose = require("mongoose");
+import { scraper } from "@/app/utils/scraper";
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
@@ -21,12 +21,21 @@ const dataSchema = new mongoose.Schema({
 
 const Data = mongoose.models.prods || mongoose.model("prods", dataSchema);
 
+async function scrapeProds() {
+  try {
+    const data = await scraper();
+    console.log(
+      "Successfully scraped " + data.length + " products with cheerio"
+    );
+    return data;
+  } catch (error) {
+    console.error("Error scraping products:", error);
+  }
+}
+
 const updateDb = async () => {
   try {
-    const response = await axios.get(
-      "https://uygun-sistem-be.onrender.com/scrape/incehesap"
-    );
-    const fetchedData = response.data;
+    const fetchedData = await scrapeProds();
 
     await Data.deleteMany({});
     await Data.insertMany(fetchedData);
@@ -37,11 +46,11 @@ const updateDb = async () => {
   }
 };
 
-cron.schedule("0 * * * *", async () => {
+cron.schedule("* * * * *", async () => {
   try {
     await updateDb();
   } catch (error) {
-    console.error("Failed to fetch data in cron job");
+    console.error("Failed cron job");
   }
 });
 
