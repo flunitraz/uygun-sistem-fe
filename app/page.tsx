@@ -1,5 +1,4 @@
 "use client";
-import data from "./mockdata.json";
 import React, { useState, useRef, useEffect } from "react";
 import { TfiLayoutGrid3, TfiAlignJustify } from "react-icons/tfi";
 import ListView from "./components/listView";
@@ -7,14 +6,22 @@ import { Prod } from "./utils/Prod";
 import Filter from "./components/filter";
 import type { TourProps, RadioChangeEvent } from "antd";
 import { Button, Tour, Radio, Select } from "antd";
-
+import axios from "axios";
 const optionsView = [
   {
-    label: <div className="translate-y-2"><TfiLayoutGrid3 /></div>,
+    label: (
+      <div className="translate-y-2">
+        <TfiLayoutGrid3 />
+      </div>
+    ),
     value: "card",
   },
   {
-    label: <div className="translate-y-2"><TfiAlignJustify /></div>,
+    label: (
+      <div className="translate-y-2">
+        <TfiAlignJustify />
+      </div>
+    ),
     value: "list",
   },
 ];
@@ -27,9 +34,9 @@ export default function Home() {
   const [open, setOpen] = useState<boolean>(false);
   const [view, setView] = useState("list");
   const [order, setOrder] = useState("default");
-  
-  const [prods, setProds] = useState<Prod[]>(data);
-  const [filteredProds, setFilteredProds] = useState<Prod[]>(data);
+
+  const [prods, setProds] = useState<Prod[]>([]);
+  const [filteredProds, setFilteredProds] = useState<Prod[]>([]);
 
   const onChangeView = ({ target: { value } }: RadioChangeEvent) => {
     setView(value);
@@ -55,6 +62,17 @@ export default function Home() {
     sortProducts(filtered, order);
   };
 
+  const getProds = async () => {
+    try {
+      const response = await axios.get("/api/getProds");
+      setProds(response.data);
+      setFilteredProds(response.data);
+    } catch (error) {
+      console.error("Error fetching data");
+      throw error;
+    }
+  };
+
   const steps: TourProps["steps"] = [
     {
       title: "Filtrele",
@@ -76,7 +94,9 @@ export default function Home() {
   useEffect(() => {
     sortProducts(filteredProds, order);
   }, [order, prods]);
-
+  useEffect(() => {
+    getProds();
+  }, []);
   return (
     <div className="w-full">
       <div className="flex justify-end gap-4 mb-2">
