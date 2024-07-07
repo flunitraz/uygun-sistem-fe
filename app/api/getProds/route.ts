@@ -46,7 +46,7 @@ const updateDb = async () => {
   }
 };
 
-cron.schedule("* * * * *", async () => {
+cron.schedule("0 * * * *", async () => {
   try {
     await updateDb();
   } catch (error) {
