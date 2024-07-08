@@ -4,7 +4,7 @@ import Filter from "./components/filter";
 import TableTopBar from "./components/tableTopBar";
 
 async function getServerSideProps() {
-  const res = await fetch("http://localhost:3000/api/getProds");
+  const res = await fetch(process.env.URL+"/api/getProds");
   const repo: Prod[] = await res.json();
   return repo;
 }
