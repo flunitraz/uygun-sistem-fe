@@ -26,5 +26,10 @@ async function updateDb() {
 }
 
 export async function GET() {
-  return updateDb();
+  try {
+    updateDb();
+    return Response.json({ isSuccess: true });
+  } catch {
+    return Response.json({ isSuccess: false });
+  }
 }
