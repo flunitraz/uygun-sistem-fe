@@ -8,17 +8,18 @@ import axios from "axios";
 //   const repo: Prod[] = await res.data();
 //   return repo;
 // }
-const getServerSideProps = async () => {
-  try {
-    const response = await axios.get(process.env.URL+"/api/getProds");
-    return(response.data);
-  } catch (error) {
-    console.error("Error fetching data");
-    throw error;
-  }
-};
+// const getServerSideProps = async () => {
+//   try {
+//     const response = await axios.get(process.env.URL+"/api/getProds");
+//     return(response.data);
+//   } catch (error) {
+//     console.error("Error fetching data");
+//     throw error;
+//   }
+// };
 export default async function Page() {
-const prods = await getServerSideProps();
+// const prods = await getServerSideProps();
+const prods = [{} as Prod]
 
   return (
     <>
