@@ -18,6 +18,8 @@ export default function Filter({ prods }: Props) {
   const [selectedEkranKarti, setSelectedEkranKarti] = useState<string[]>([]);
   const [selectedRam, setSelectedRam] = useState<string[]>([]);
   const [selectedDepolama, setSelectedDepolama] = useState<string[]>([]);
+  const [selectedSatici, setSelectedSatici] = useState<string[]>([]);
+
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(150000);
 
@@ -25,6 +27,9 @@ export default function Filter({ prods }: Props) {
     switch (type) {
       case "islemci":
         setSelectedIslemci(value);
+        break;
+      case "satici":
+        setSelectedSatici(value);
         break;
       case "ekran_karti":
         setSelectedEkranKarti(value);
@@ -46,6 +51,10 @@ export default function Filter({ prods }: Props) {
         param === "islemci" ||
         selectedIslemci.length === 0 ||
         selectedIslemci.includes(prod.islemci);
+      const saticiMatch =
+        param === "satici" ||
+        selectedSatici.length === 0 ||
+        selectedSatici.includes(prod.satici);
       const ekranKartiMatch =
         param === "ekran_karti" ||
         selectedEkranKarti.length === 0 ||
@@ -63,6 +72,7 @@ export default function Filter({ prods }: Props) {
         (maxPrice === undefined || Number(prod.fiyat) <= maxPrice);
       return (
         islemciMatch &&
+        saticiMatch &&
         ekranKartiMatch &&
         ramMatch &&
         depolamaMatch &&
@@ -82,11 +92,11 @@ export default function Filter({ prods }: Props) {
     selectedIslemci,
     selectedEkranKarti,
     selectedRam,
+    selectedSatici,
     selectedDepolama,
     minPrice,
     maxPrice,
   ]);
-
 
   return (
     <div className="h-min min-w-64 max-w-64 p-4 flex flex-col gap-2">
@@ -145,6 +155,15 @@ export default function Filter({ prods }: Props) {
         min={0}
         max={150000}
         defaultValue={[minPrice, maxPrice]}
+      />{" "}
+      <Text>Satıcı</Text>
+      <Select
+        mode="multiple"
+        allowClear
+        style={{ width: "100%" }}
+        placeholder="Satıcı seç"
+        onChange={(value) => handleChange(value, "satici")}
+        options={getUniqueValues(prods, "satici", handleFilter("satici"))}
       />
     </div>
   );
