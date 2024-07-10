@@ -2,11 +2,11 @@ import { Prod } from "./utils/Prod";
 import ListView from "./components/listView";
 import Filter from "./components/filter";
 import TableTopBar from "./components/tableTopBar";
-import axios from "axios";
 const getServerSideProps = async () => {
   try {
-    const response = await axios.get(process.env.URL+"/api/getProds");
-    return(response.data);
+    const response = await fetch(process.env.URL+"/api/getProds", { next: { revalidate: 3600 } });
+    const data = await response.json();
+    return(data);
   } catch (error) {
     console.error("Error fetching data");
     throw error;
